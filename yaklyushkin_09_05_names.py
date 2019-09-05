@@ -42,3 +42,31 @@ def prepare(full_context, probability_limit, text_list):
         chains_list.append(parse_chains_of_words(text))
     
     return chains_list, context_correctors
+
+
+def find_corrections(chain, context_correctors):
+    result = {}
+    for corrector in context_correctors:
+        corrections = corrector[1].correct(chain)
+        if len(corrections) != 0:
+            result[corrector[0]] = corrections
+    return result
+
+
+def read_corrections_list(chains_list, context_correctors):
+    corrections = list()
+    for chains in chains_list:
+        tmp_result = list()
+        for chain in chains:
+            founded = find_corrections(chain, context_correctors)
+            for key in founded.keys():
+                for word in founded[key]:
+                    dummy = (word.words[0][1].position, word.entered, word.correction, word.score, key,)
+                    tmp_result.append(dummy)
+        corrections.append(tmp_result)
+    return corrections
+
+
+def save_corrections_to_json(corrections, file_path):    
+    with open(file_path, 'w', encoding='utf8') as outfile:
+        json.dump(corrections, outfile)

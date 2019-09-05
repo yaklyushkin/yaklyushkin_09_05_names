@@ -91,17 +91,6 @@ class SimilarityChecker(object):
                 self.entered_list.append(entered)
 
 
-def read_similarity(chain, context_list, probability_limit, is_surname_and_name):
-    if len(context_list) != 0:
-        print(is_surname_and_name)
-        checker = SimilarityChecker(context_list, probability_limit, is_surname_and_name)
-        checker.check(chain)
-        return checker.entered_list
-    else:
-        return []
-
-
-
 # Расскомментировать для проверки Исправление 2: упорядочивание по вероятности
 """def read_similarity(chain, check_context, probability_limit, is_surname_and_name):
     if len(check_context) != 0:
