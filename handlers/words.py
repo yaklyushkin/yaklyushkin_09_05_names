@@ -42,6 +42,9 @@ class Word(object):
             next = None
         return '"%s" at %d (<%s> <%s>)' % (self.word, self.position, prev, next)
 
+    def __eq__(self, other):
+        return (self.word == other.word and self.position == other.position)
+
 
 class ChainOfWords(object):
 
