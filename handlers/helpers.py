@@ -27,3 +27,13 @@ def parse_chains_of_words(text):
     if current_chain is not None:
         result.append(current_chain)
     return result
+
+
+def split_context_by_length(context):
+    result = {'2': list(), '1': list()}
+    for word in context:
+        if word.find(' ') != -1:
+            result['2'].append(word)
+        else:
+            result['1'].append(word)
+    return result
