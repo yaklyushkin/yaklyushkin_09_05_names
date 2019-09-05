@@ -99,3 +99,57 @@ def read_similarity(chain, context_list, probability_limit, is_surname_and_name)
         return checker.entered_list
     else:
         return []
+
+
+
+# Расскомментировать для проверки Исправление 2: упорядочивание по вероятности
+"""def read_similarity(chain, check_context, probability_limit, is_surname_and_name):
+    if len(check_context) != 0:
+        checker = SimilarityChecker(check_context, probability_limit, is_surname_and_name)
+        checker.check(chain)
+        return checker.entered_list
+    else:
+        return []
+"""
+
+
+class Corrector(object):
+
+    def __init__(self, check_context, probability_limit, is_surname_and_name):
+        self.check_context = check_context
+        self.probability_limit = probability_limit
+        self.is_surname_and_name = is_surname_and_name
+
+    def read_similarity(self, chain):
+        if len(self.check_context) != 0:
+            checker = SimilarityChecker(self.check_context, self.probability_limit, self.is_surname_and_name)
+            checker.check(chain)
+            return checker.entered_list
+        else:
+            return []
+
+    def prune(self, chain, entered_list):
+        result = []
+        words_cnt = chain.length
+        used_words = [False] * words_cnt
+        for entered in entered_list:
+            if entered.score == 0:
+                continue
+            is_used_some_word_already = False
+            for word in entered.words:
+                if used_words[word[0]]:
+                    is_used_some_word_already = True
+                    break
+            if not is_used_some_word_already:
+                for word in entered.words:
+                    chain.remove_word(word[1])
+                    used_words[word[0]] = True
+                if int(entered.score) != 1:
+                    result.append(entered)
+        return result
+
+    def correct(self, chain):
+        entered_list = self.read_similarity(chain)
+        entered_list.sort(reverse=True)
+        corrections =  self.prune(chain, entered_list)
+        return corrections

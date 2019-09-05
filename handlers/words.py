@@ -51,12 +51,15 @@ class ChainOfWords(object):
     def __init__(self):
         self.first = None
         self.last = None
+        self.length = 0
 
     def add_word(self, word):
         word.add_to_chain(self)
+        self.length += 1
 
     def remove_word(self, word):
         word.remove_from_chain()
+        self.length -= 1
 
     def __str__(self):
         result = ''
